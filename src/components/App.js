@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Provider, connect } from 'react-redux'
 import { configureStore } from '../store'
 import * as actions from '../actions'
-import DevTools from './DevTools'
+import DevTools from './DevTools' // eslint-disable-line
 import styled from 'styled-components'
 
 const Box = styled.div`
@@ -25,10 +25,31 @@ const GameController = ( { start, game }) => {
     </Flex>
   )
 }
+const Enemy = () => {
+  return <div>_◯_</div>
+}
+const Open = ( {openState} ) => (
+  !!openState ? <div>❗❗❗</div> : <div> _ </div>
+)
+const Result = ({ game }) => {
+  const { judge } = game
+  if(judge === null){
+    return <div></div>
+  }
+  return (judge) ? <div>Win</div> : <div>Lose</div>
+}
+
+const PlayController = ( { bang } ) => {
+  return <button onClick={() => bang(true)} >A</button>
+}
 
 const Takenoko = ( props ) => {
   return <div>
     <GameController {...props} />
+    <PlayController {...props} />
+    <Open {...props} />
+    <Enemy {...props} />
+    <Result {...props} />
   </div>
 }
 
@@ -44,7 +65,7 @@ class App extends Component {
       <Provider store={this.store}>
         <Box>
           <Container/>
-          <DevTools />
+          {/* <DevTools /> */}
         </Box>
       </Provider>
     )

@@ -10,14 +10,27 @@ const game = combineReducers({
   timer: createReducer({
     [actions.incrementTime]: (state, payload) => state + 1
   }, 0),
+  judge: createReducer({
+    [actions.judge]: (state, payload) => payload
+  }, null)
 })
 
-const sandbox = (state, {type, payload }) =>{
-  console.log(type, payload)
-  return {}
-}
+const openState = createReducer({
+  [actions.open]: (state, payload) => {
+    return payload
+  }
+}, false)
+
+const sandbox = createReducer({
+  [actions.sandbox]: (state, payload) => {
+    console.log(payload)
+    return payload
+  }
+}, "")
+
 
 export default combineReducers({
   game,
-  sandbox
+  openState,
+  sandbox,
 })
