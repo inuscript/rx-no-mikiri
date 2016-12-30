@@ -10,8 +10,9 @@ const openTiming = 300 + Math.ceil(Math.random() * 150) // 3s ~ 18s
 // 時計進める
 const startTimerEpic = (action$, store) =>
   action$.ofType(actions.start.getType())
-    .switchMap( () => Rx.Observable.interval(frame)
-      .map( () => actions.incrementTime( store.getState().game.timer + 1 ))
+    .switchMap( () =>
+      Rx.Observable.interval(frame)
+        .map( () => actions.incrementTime( store.getState().game.timer + 1 ))
     )
 
 const openEpic = (action$, store) =>
@@ -20,41 +21,19 @@ const openEpic = (action$, store) =>
     .filter( (payload) => payload === openTiming)
     .map( () => actions.open(true) )
 
-// const judgeEpic = (action$, store) =>
-//   action$.ofType(actions.open.getType(), actions.bang.getType())
-//     .bufferTime(700)
-//     .map( (items) => {
-//       if(items.length === 0){
-//         return {type: "SINK"}
-//       }
-//       if(items.length === 2){
-//         return actions.judge(true)
-//       }
-//       return actions.judge(false)
-//     })
-
-const judgeEpic = (action$, store) =>
+const judgeEpic = (action$, store) => 
   action$.ofType(actions.open.getType(), actions.bang.getType())
     .bufferTime(700)
-
+    .filter( items => items.length > 0 )
     .map( (items) => {
-      if(items.length === 0){
-        return {type: "SINK"}
-      }
-      if(items.length === 2){
-        return actions.judge(true)
-      }
-      return actions.judge(false)
+      return (items.length === 2)
+       ? actions.judge(true)
+       : actions.judge(false)
     })
-
-const debugEpic = (action$, store) =>
-  action$.ofType(actions.incrementTime.getType())
-    // .do( m => console.log(m))
-    .ignoreElements()
 
 export const epics = combineEpics(
   startTimerEpic,
   openEpic,
   judgeEpic,
-  debugEpic
+  // debug,
 )
