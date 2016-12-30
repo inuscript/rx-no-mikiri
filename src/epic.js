@@ -12,6 +12,7 @@ const startTimerEpic = (action$, store) =>
   action$.ofType(actions.start.getType())
     .switchMap( () =>
       Rx.Observable.interval(frame)
+        .takeUntil(action$.ofType(actions.stop.getType()))
         .map( () => actions.incrementTime( store.getState().game.timer + 1 ))
     )
 
@@ -19,21 +20,29 @@ const openEpic = (action$, store) =>
   action$.ofType(actions.incrementTime.getType())
     .map( ({payload}) => payload)
     .filter( (payload) => payload === openTiming)
-    .map( () => actions.open(true) )
+    .mapTo( actions.open(true) )
 
-const judgeEpic = (action$, store) => 
+const keyEpic = (action$, store) =>
+  action$.ofType(actions.start.getType())
+    .switchMap( () => Rx.Observable.fromEvent(document, 'keydown')
+      .filter( ({key}) => key === "a")
+    ).mapTo( actions.bang(true) )
+
+const judgeEpic = (action$, store) =>
   action$.ofType(actions.open.getType(), actions.bang.getType())
-    .bufferTime(700)
+    .bufferTime(500)
     .filter( items => items.length > 0 )
-    .map( (items) => {
-      return (items.length === 2)
-       ? actions.judge(true)
-       : actions.judge(false)
-    })
+    .map( (items) => (items.length === 2)
+      ? actions.judge(true)
+      : actions.judge(false)
+    )
+    .mergeMap( (judge) => [ actions.stop(), judge ])
+
+
 
 export const epics = combineEpics(
   startTimerEpic,
   openEpic,
   judgeEpic,
-  // debug,
+  keyEpic
 )

@@ -30,8 +30,8 @@ const Enemy = ( { game } ) => {
   const msg = (judge === true) ? '< ギャー' : ''
   return <div>_◯_ {msg}</div>
 }
-const Open = ( {openState} ) => (
-  !!openState ? <div>❗❗❗</div> : <div> &nbsp; </div>
+const Open = ( { game } ) => (
+  !!game.open ? <div>❗❗❗</div> : <div> &nbsp; </div>
 )
 const Result = ({ game }) => {
   const { judge } = game
@@ -42,7 +42,7 @@ const Result = ({ game }) => {
 }
 
 const PlayController = ( { bang } ) => {
-  return <button onClick={() => bang(true)} >A</button>
+  return <button onClick={() => bang(true)}>A</button>
 }
 
 const Takenoko = ( props ) => {
