@@ -25,11 +25,13 @@ const GameController = ( { start, game }) => {
     </Flex>
   )
 }
-const Enemy = () => {
-  return <div>_◯_</div>
+const Enemy = ( { game } ) => {
+  const { judge } = game
+  const msg = (judge === true) ? '< ギャー' : ''
+  return <div>_◯_ {msg}</div>
 }
 const Open = ( {openState} ) => (
-  !!openState ? <div>❗❗❗</div> : <div> _ </div>
+  !!openState ? <div>❗❗❗</div> : <div> &nbsp; </div>
 )
 const Result = ({ game }) => {
   const { judge } = game
