@@ -7,6 +7,14 @@ import * as actions from './actions'
 const frame = 10 // 1 / 10 
 const openTiming = 300 + Math.ceil(Math.random() * 150) // 3s ~ 18s
 
+const keyStartEpic = (action$, store) =>
+  action$.ofType(actions.ready.getType())
+    .do(a => console.log("aaa"))
+    .switchMap( () => Rx.Observable.fromEvent(document, 'keydown')
+      .filter( ({key}) => key === "s")
+    )
+    .mapTo( actions.start() )
+
 // 時計進める
 const startTimerEpic = (action$, store) =>
   action$.ofType(actions.start.getType())
@@ -22,11 +30,12 @@ const openEpic = (action$, store) =>
     .filter( (payload) => payload === openTiming)
     .mapTo( actions.open(true) )
 
-const keyEpic = (action$, store) =>
+const keyBangEpic = (action$, store) =>
   action$.ofType(actions.start.getType())
     .switchMap( () => Rx.Observable.fromEvent(document, 'keydown')
       .filter( ({key}) => key === "a")
     ).mapTo( actions.bang(true) )
+
 
 const judgeEpic = (action$, store) =>
   action$.ofType(actions.open.getType(), actions.bang.getType())
@@ -44,5 +53,6 @@ export const epics = combineEpics(
   startTimerEpic,
   openEpic,
   judgeEpic,
-  keyEpic
+  keyBangEpic,
+  keyStartEpic,
 )

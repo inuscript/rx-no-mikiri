@@ -45,14 +45,20 @@ const PlayController = ( { bang } ) => {
   return <button onClick={() => bang(true)}>A</button>
 }
 
-const Takenoko = ( props ) => {
-  return <div>
-    <GameController {...props} />
-    <PlayController {...props} />
-    <Open {...props} />
-    <Enemy {...props} />
-    <Result {...props} />
-  </div>
+class Takenoko extends Component {
+  componentDidMount(){
+    this.props.ready()
+  }
+  render(){
+    const { props } = this
+    return <div>
+      <GameController {...props} />
+      <PlayController {...props} />
+      <Open {...props} />
+      <Enemy {...props} />
+      <Result {...props} />
+    </div>
+  }
 }
 
 const Container = connect(state => state, actions)(Takenoko)

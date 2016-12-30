@@ -1,5 +1,6 @@
 import { createAction } from 'redux-act'
 
+export const ready = createAction("READY")
 export const start = createAction("START")
 export const stop = createAction("STOP")
 export const incrementTime = createAction("INCREMENT_TIME")
