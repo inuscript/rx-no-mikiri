@@ -16,11 +16,12 @@ const Flex = styled.div`
   justify-content: space-between;
 `
 
-const GameController = ( { start, game }) => {
+const GameController = ( { start, reset, game }) => {
   const { timer } = game
   return (
     <Flex>
       <button onClick={ _ => start() }>Start</button>
+      <button onClick={ _ => reset() }>Reset</button>
       <div>Timer: {timer}</div>
     </Flex>
   )
@@ -41,8 +42,13 @@ const Result = ({ game }) => {
   return (judge) ? <div>Win</div> : <div>Lose</div>
 }
 
-const PlayController = ( { bang } ) => {
-  return <button onClick={() => bang(true)}>A</button>
+const PlayController = ( { doAttack } ) => {
+  return <button onClick={() => doAttack()}>A</button>
+}
+
+const Debug = ( {game} ) => {
+  const {open, attack} = game
+  return <div>{open} - {attack} = {attack - open}</div>
 }
 
 class Takenoko extends Component {
@@ -57,6 +63,7 @@ class Takenoko extends Component {
       <Open {...props} />
       <Enemy {...props} />
       <Result {...props} />
+      <Debug {...props} />
     </div>
   }
 }

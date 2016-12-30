@@ -7,13 +7,28 @@ import * as actions from './actions'
 const frame = 10 // 1 / 10 
 const openTiming = 300 + Math.ceil(Math.random() * 150) // 3s ~ 18s
 
+const getTime = ( { getState } ) => getState().game.timer
+
+const keyEventSource = Rx.Observable.fromEvent(document, 'keydown')
 const keyStartEpic = (action$, store) =>
-  action$.ofType(actions.ready.getType())
-    .do(a => console.log("aaa"))
-    .switchMap( () => Rx.Observable.fromEvent(document, 'keydown')
+  action$
+    .switchMap( () => keyEventSource
       .filter( ({key}) => key === "s")
+      .mapTo( actions.start() )
     )
-    .mapTo( actions.start() )
+const keyResetEpic = (action$, store) =>
+  action$
+    .switchMap( () => keyEventSource
+      .filter( ({key}) => key === "r")
+      .mapTo( actions.reset() )
+    )
+
+const keyBangEpic = (action$, store) =>
+  action$.ofType(actions.start.getType())
+    .switchMap( () => keyEventSource
+      .filter( ({key}) => key === "a")
+      .mapTo( actions.doAttack() )
+    )
 
 // 時計進める
 const startTimerEpic = (action$, store) =>
@@ -21,29 +36,29 @@ const startTimerEpic = (action$, store) =>
     .switchMap( () =>
       Rx.Observable.interval(frame)
         .takeUntil(action$.ofType(actions.stop.getType()))
-        .map( () => actions.incrementTime( store.getState().game.timer + 1 ))
+        .map( () => actions.incrementTime( getTime(store) + 1 ))
     )
 
-const openEpic = (action$, store) =>
+const doOpenEpic = (action$, store) =>
   action$.ofType(actions.incrementTime.getType())
     .map( ({payload}) => payload)
     .filter( (payload) => payload === openTiming)
-    .mapTo( actions.open(true) )
+    .map( () => actions.recordOpen( getTime(store) ) )
 
-const keyBangEpic = (action$, store) =>
-  action$.ofType(actions.start.getType())
-    .switchMap( () => Rx.Observable.fromEvent(document, 'keydown')
-      .filter( ({key}) => key === "a")
-    ).mapTo( actions.bang(true) )
-
+const doAttackEpic = (action$, store) =>
+  action$.ofType(actions.doAttack.getType())
+    .map( () => actions.recordAttack( getTime(store) ) )
 
 const judgeEpic = (action$, store) =>
-  action$.ofType(actions.open.getType(), actions.bang.getType())
-    .bufferTime(500)
+  action$.ofType(actions.recordAttack.getType(), actions.recordOpen.getType())
+    .bufferTime(400)
     .filter( items => items.length > 0 )
-    .map( (items) => (items.length === 2)
-      ? actions.judge(true)
-      : actions.judge(false)
+    .map( ([first, second]) =>
+      (!!first && !!second
+        && first.type === actions.recordOpen.getType()
+        && second.type === actions.recordAttack.getType())
+        ? actions.judge(true)
+        : actions.judge(false)
     )
     .mergeMap( (judge) => [ actions.stop(), judge ])
 
@@ -51,8 +66,10 @@ const judgeEpic = (action$, store) =>
 
 export const epics = combineEpics(
   startTimerEpic,
-  openEpic,
+  doOpenEpic,
+  doAttackEpic,
   judgeEpic,
   keyBangEpic,
   keyStartEpic,
+  keyResetEpic,
 )

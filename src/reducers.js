@@ -6,18 +6,24 @@ const game = combineReducers({
   gameState: createReducer({
     [actions.start]: (state, payload, meta) => true,
     [actions.stop]: (state, payload, meta) => false,
+    [actions.reset]: () => false
   }, false),
   timer: createReducer({
-    [actions.incrementTime]: (state, payload) => state + 1
+    [actions.incrementTime]: (state, payload) => state + 1,
+    [actions.reset]: () => 0
   }, 0),
   judge: createReducer({
-    [actions.judge]: (state, payload) => payload
+    [actions.judge]: (state, payload) => payload,
+    [actions.reset]: () => null
   }, null),
   open: createReducer({
-    [actions.open]: (state, payload) => {
-      return payload
-    }
-  }, false)
+    [actions.recordOpen]: (state, payload) => payload,
+    [actions.reset]: () => 0
+  }, 0),
+  attack: createReducer({
+    [actions.recordAttack]: (state, payload) => payload,
+    [actions.reset]: () => 0
+  }, 0)
 })
 
 // eslint-disable-next-line
