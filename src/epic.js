@@ -55,7 +55,7 @@ const judgeEpic = (action$, store) =>
     // .filter( items => items.length > 0 )
     .filter( ([first, second]) =>
       (first.type === actions.recordOpen.getType()
-        && second.type === actions.recordAttack.getType()))
+      && second.type === actions.recordAttack.getType()))
     .map( ([first, second]) => second.payload - first.payload )
     .map( (diff) => (0 < diff && diff < 20)
         ? actions.judge(true)
