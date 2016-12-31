@@ -49,13 +49,13 @@ const PlayController = ( { doAttack, game } ) => {
 
 const Level = ({game, changeLevel}) => {
   const { level } = game
-  return <Flex>
+  return <div>
     Level: <select value={level} onChange={(e) => changeLevel(e.target.value)}>
       <option value={30}>Easy (30ms)</option>
       <option value={20}>Normal (20ms)</option>
       <option value={10}>Hard (10ms)</option>
     </select>
-  </Flex>
+  </div>
 }
 
 const Debug = ( {game} ) => {
