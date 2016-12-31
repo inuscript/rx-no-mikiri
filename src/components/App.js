@@ -28,11 +28,15 @@ const Enemy = ( { game } ) => {
 const Big = styled.div`
   font-size: 2em;
 `
-const Flag = ( { game } ) => (
-  <Big>
-    {!!game.open ? <div>❗❗❗</div> : <div> &nbsp; </div>}
+const Flag = ( { game } ) => {
+  const { open, started} = game
+  if(!started){
+    return <Big>&nbsp;</Big>
+  }
+  return <Big>
+    {!!open ? <span>❗❗❗</span> : <span>🍃🍃🍃 </span>}
   </Big>
-)
+}
 
 const Result = ({ game }) => {
   const { judge } = game
