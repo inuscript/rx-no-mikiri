@@ -5,12 +5,6 @@ import * as actions from '../actions'
 import DevTools from './DevTools' // eslint-disable-line
 import styled from 'styled-components'
 
-const Box = styled.div`
-  width: 50vw;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-sizing: border-box;
-`
 const Flex = styled.div`
   display:flex;
   justify-content: space-between;
@@ -49,7 +43,7 @@ const Result = ({ game }) => {
 }
 
 const PlayController = ( { doAttack } ) => {
-  return <button onClick={() => doAttack()}>A</button>
+  return <button onClick={() => doAttack()}>Attack</button>
 }
 
 const Debug = ( {game} ) => {
@@ -57,7 +51,11 @@ const Debug = ( {game} ) => {
   return <div>{open} - {attack} = {attack - open}</div>
 }
 
-const Cnt = styled.div`
+const Box = styled.div`
+  width: 50vw;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
   background: ${props => (props.judge === false) ? "rgb(222, 78, 73)": "white"};
 `
 
@@ -67,14 +65,20 @@ class Takenoko extends Component {
   }
   render(){
     const { props } = this
-    return <Cnt judge={props.game.judge} >
+    return <Box judge={props.game.judge} >
+      <Flex>
+        <div>Keyboard Shortcut</div>
+        <div>[ S ]: Start</div>
+        <div>[ A ]: Attack</div>
+        <div>[ R ]: Reset</div>
+      </Flex>
       <GameController {...props} />
       <PlayController {...props} />
       <Flag {...props} />
       <Enemy {...props} />
       <Result {...props} />
       <Debug {...props} />
-    </Cnt>
+    </Box>
   }
 }
 
@@ -88,10 +92,8 @@ class App extends Component {
   render() {
     return (
       <Provider store={this.store}>
-        <Box>
-          <Container/>
-          {/* <DevTools /> */}
-        </Box>
+        <Container/>
+        {/* <DevTools /> */}
       </Provider>
     )
   }
