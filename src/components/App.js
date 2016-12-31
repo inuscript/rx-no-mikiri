@@ -29,13 +29,14 @@ const Big = styled.div`
   font-size: 2em;
 `
 const Flag = ( { game } ) => {
-  const { open, started} = game
+  const { open, started, judge } = game
   if(!started){
-    return <Big>&nbsp;</Big>
+    if(judge === null){
+      return <span> &nbsp; </span>
+    }
+    return !!judge ? <span>⭐🐙⭐</span> : <span>💀😇💀</span>
   }
-  return <Big>
-    {!!open ? <span>❗❗❗</span> : <span>🍃🍃🍃 </span>}
-  </Big>
+  return !!open ? <span>❗❗❗</span> : <span>🍃🍃🍃 </span>
 }
 
 const Result = ({ game }) => {
@@ -82,6 +83,7 @@ const Box = styled.div`
 const Description = () => (
   <div>
     <h3>Rx no mikiri</h3>
+    <div>Click Attack at the moment when "❗" comes out </div>
     <Flex>
       <div>Keyboard Shortcut</div>
       <div>[ S ]: Start</div>
@@ -103,8 +105,8 @@ class Takenoko extends Component {
         <Level {...props} />
         <GameController {...props} />
         <PlayController {...props} />
-        <Flag {...props} />
-        <Enemy {...props} />
+        <Big><Flag {...props} /></Big>
+        {/* <Enemy {...props} /> */}
         <Result {...props} />
         <Debug {...props} />
       </Box>
