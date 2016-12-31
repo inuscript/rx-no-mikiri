@@ -51,18 +51,16 @@ const doAttackEpic = (action$, store) =>
 
 const judgeEpic = (action$, store) =>
   action$.ofType(actions.recordAttack.getType(), actions.recordOpen.getType())
-    .bufferTime(400)
-    .filter( items => items.length > 0 )
-    .map( ([first, second]) =>
-      (!!first && !!second
-        && first.type === actions.recordOpen.getType()
-        && second.type === actions.recordAttack.getType())
+    .bufferCount(2)
+    // .filter( items => items.length > 0 )
+    .filter( ([first, second]) =>
+      (first.type === actions.recordOpen.getType()
+        && second.type === actions.recordAttack.getType()))
+    .map( ([first, second]) => second.payload - first.payload )
+    .map( (diff) => (0 < diff && diff < 20)
         ? actions.judge(true)
-        : actions.judge(false)
-    )
+        : actions.judge(false) )
     .mergeMap( (judge) => [ actions.stop(), judge ])
-
-
 
 export const epics = combineEpics(
   startTimerEpic,
