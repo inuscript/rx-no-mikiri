@@ -11,11 +11,11 @@ const Flex = styled.div`
 `
 
 const GameController = ( { start, reset, game }) => {
-  const { timer } = game
+  const { timer, started } = game
   return (
     <Flex>
-      <button onClick={ _ => start() }>Start</button>
-      <button onClick={ _ => reset() }>Reset</button>
+      <button onClick={ _ => start() } disabled={!!started}>Start</button>
+      <button onClick={ _ => reset() } >Reset</button>
       <div>Timer: {timer}</div>
     </Flex>
   )
@@ -39,11 +39,23 @@ const Result = ({ game }) => {
   if(judge === null){
     return <div></div>
   }
-  return (judge) ? <div>あなたの勝ち</div> : <div>あなたの負け</div>
+  return (judge) ? <div>You Win</div> : <div>You Lose</div>
 }
 
-const PlayController = ( { doAttack } ) => {
-  return <button onClick={() => doAttack()}>Attack</button>
+const PlayController = ( { doAttack, game } ) => {
+  const { started } = game
+  return <button onClick={() => doAttack()} disabled={!started}>Attack</button>
+}
+
+const Level = ({game, changeLevel}) => {
+  const { level } = game
+  return <Flex>
+    Level: <select value={level} onChange={(e) => changeLevel(e.target.value)}>
+      <option value={30}>Easy (30ms)</option>
+      <option value={20}>Normal (20ms)</option>
+      <option value={10}>Hard (10ms)</option>
+    </select>
+  </Flex>
 }
 
 const Debug = ( {game} ) => {
@@ -51,13 +63,29 @@ const Debug = ( {game} ) => {
   return <div>{open} - {attack} = {attack - open}</div>
 }
 
+const AppContainer = styled.div`
+  width: 50vw;
+  box-sizing: border-box;
+`
+
 const Box = styled.div`
   width: 50vw;
   border: 1px solid #ccc;
   padding: 10px;
-  box-sizing: border-box;
   background: ${props => (props.judge === false) ? "rgb(222, 78, 73)": "white"};
 `
+
+const Description = () => (
+  <div>
+    <h3>Rx no mikiri</h3>
+    <Flex>
+      <div>Keyboard Shortcut</div>
+      <div>[ S ]: Start</div>
+      <div>[ A ]: Attack</div>
+      <div>[ R ]: Reset</div>
+    </Flex>
+  </div>
+)
 
 class Takenoko extends Component {
   componentDidMount(){
@@ -65,20 +93,18 @@ class Takenoko extends Component {
   }
   render(){
     const { props } = this
-    return <Box judge={props.game.judge} >
-      <Flex>
-        <div>Keyboard Shortcut</div>
-        <div>[ S ]: Start</div>
-        <div>[ A ]: Attack</div>
-        <div>[ R ]: Reset</div>
-      </Flex>
-      <GameController {...props} />
-      <PlayController {...props} />
-      <Flag {...props} />
-      <Enemy {...props} />
-      <Result {...props} />
-      <Debug {...props} />
-    </Box>
+    return <AppContainer>
+      <Description />
+      <Box judge={props.game.judge} >
+        <Level {...props} />
+        <GameController {...props} />
+        <PlayController {...props} />
+        <Flag {...props} />
+        <Enemy {...props} />
+        <Result {...props} />
+        <Debug {...props} />
+      </Box>
+    </AppContainer>
   }
 }
 

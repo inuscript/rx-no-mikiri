@@ -3,11 +3,14 @@ import { createReducer } from 'redux-act'
 import * as actions from './actions'
 
 const game = combineReducers({
-  gameState: createReducer({
-    [actions.start]: (state, payload, meta) => true,
-    [actions.stop]: (state, payload, meta) => false,
+  started: createReducer({
+    [actions.start]: () => true,
+    [actions.stop]: () => false,
     [actions.reset]: () => false
   }, false),
+  level: createReducer({
+    [actions.changeLevel]: (state, payload) => payload
+  }, 20),
   timer: createReducer({
     [actions.incrementTime]: (state, payload) => state + 1,
     [actions.reset]: () => 0

@@ -8,6 +8,7 @@ const frame = 10 // 1 / 10
 const openTiming = 300 + Math.ceil(Math.random() * 150) // 3s ~ 18s
 
 const getTime = ( { getState } ) => getState().game.timer
+const getLevel = ( { getState } ) => getState().game.level
 
 const keyEventSource = Rx.Observable.fromEvent(document, 'keydown')
 const keyStartEpic = (action$, store) =>
@@ -57,7 +58,7 @@ const judgeEpic = (action$, store) =>
       (first.type === actions.recordOpen.getType()
       && second.type === actions.recordAttack.getType()))
     .map( ([first, second]) => second.payload - first.payload )
-    .map( (diff) => (0 < diff && diff < 20)
+    .map( (diff) => (0 < diff && diff < getLevel(store))
         ? actions.judge(true)
         : actions.judge(false) )
     .mergeMap( (judge) => [ actions.stop(), judge ])

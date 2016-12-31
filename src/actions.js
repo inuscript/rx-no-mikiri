@@ -4,6 +4,7 @@ export const ready = createAction("READY")
 export const start = createAction("START")
 export const stop = createAction("STOP")
 export const reset = createAction("RESET")
+export const changeLevel = createAction("changeLevel")
 
 export const incrementTime = createAction("INCREMENT_TIME")
 
