@@ -25,7 +25,7 @@ const keyResetEpic = (action$, store) =>
     )
 
 const keyBangEpic = (action$, store) =>
-  action$.ofType(actions.start.getType())
+  action$.ofType(actions.start)
     .switchMap( () => keyEventSource
       .filter( ({key}) => key === "a")
       .mapTo( actions.doAttack() )
@@ -33,35 +33,40 @@ const keyBangEpic = (action$, store) =>
 
 // 時計進める
 const startTimerEpic = (action$, store) =>
-  action$.ofType(actions.start.getType())
+  action$.ofType(actions.start)
     .switchMap( () =>
       Rx.Observable.interval(frame)
-        .takeUntil(action$.ofType(actions.stop.getType()))
+        .takeUntil(action$.ofType(actions.stop))
         .map( () => actions.incrementTime( getTime(store) + 1 ))
     )
 
 const doOpenEpic = (action$, store) =>
-  action$.ofType(actions.incrementTime.getType())
+  action$.ofType(actions.incrementTime)
     .map( ({payload}) => payload)
     .filter( (payload) => payload === openTiming)
     .map( () => actions.recordOpen( getTime(store) ) )
 
 const doAttackEpic = (action$, store) =>
-  action$.ofType(actions.doAttack.getType())
+  action$.ofType(actions.doAttack)
     .map( () => actions.recordAttack( getTime(store) ) )
 
 const judgeEpic = (action$, store) =>
-  action$.ofType(actions.recordAttack.getType(), actions.recordOpen.getType())
+  action$.ofType(actions.recordAttack, actions.recordOpen)
     .bufferCount(2)
     // .filter( items => items.length > 0 )
     .filter( ([first, second]) =>
-      (first.type === actions.recordOpen.getType()
-      && second.type === actions.recordAttack.getType()))
+      (first.type === actions.recordOpen
+      && second.type === actions.recordAttack))
     .map( ([first, second]) => second.payload - first.payload )
     .map( (diff) => (0 < diff && diff < getLevel(store))
         ? actions.judge(true)
         : actions.judge(false) )
     .mergeMap( (judge) => [ actions.stop(), judge ])
+
+const debugEpic = (action$, store) =>
+  action$
+    .do( () => console.log(store.getState()) )
+    .ignoreElements()
 
 export const epics = combineEpics(
   startTimerEpic,
@@ -71,4 +76,5 @@ export const epics = combineEpics(
   keyBangEpic,
   keyStartEpic,
   keyResetEpic,
+  debugEpic
 )

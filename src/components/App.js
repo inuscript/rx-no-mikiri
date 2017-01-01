@@ -114,7 +114,7 @@ class Takenoko extends Component {
   }
 }
 
-const Container = connect(state => state, actions)(Takenoko)
+const Container = connect(state => ({ game: state }), actions)(Takenoko)
 
 class App extends Component {
   constructor(){

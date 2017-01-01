@@ -2378,13 +2378,9 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-graceful-fs@4.1.10:
+graceful-fs@4.1.10, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.10"
   resolved graceful-fs-4.1.10.tgz#f2d720c22092f743228775c75e3612632501f131
-
-graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
-  version "4.1.11"
-  resolved graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658
 
 "graceful-readlink@>= 1.0.0":
   version "1.0.1"
@@ -4596,6 +4592,13 @@ redux-actions@^1.2.0:
     lodash "^4.13.1"
     reduce-reducers "^0.1.0"
 
+redux-candy@^0.0.3:
+  version "0.0.3"
+  resolved redux-candy-0.0.3.tgz#71feda3dc3f767542b129341a6405c02326cc3ac
+  dependencies:
+    redux-actions "^1.2.0"
+    updeep "^1.0.0"
+
 redux-devtools-dock-monitor@^1.1.1:
   version "1.1.1"
   resolved redux-devtools-dock-monitor-1.1.1.tgz#6ef4ff5a7c42f5d7fa39c34859a8f4eb4dee9947
@@ -5314,6 +5317,12 @@ uniqs@^2.0.0:
 unpipe@~1.0.0:
   version "1.0.0"
   resolved unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec
+
+updeep@^1.0.0:
+  version "1.0.0"
+  resolved updeep-1.0.0.tgz#e5f49d933308fb02730fd4f321cb3e36bf04b0f0
+  dependencies:
+    lodash "^4.2.0"
 
 upper-case@^1.1.1:
   version "1.1.3"
