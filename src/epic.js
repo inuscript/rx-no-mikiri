@@ -34,7 +34,6 @@ const keyBangEpic = (action$, store) =>
 // 時計進める
 const startTimerEpic = (action$, store) =>
   action$.ofType(actions.start.toString())
-    .do( (action) => console.log(action, store.getState()) )
     .switchMap( () =>
       Rx.Observable.interval(frame)
         .takeUntil(action$.ofType(actions.stop.toString()))
@@ -43,8 +42,9 @@ const startTimerEpic = (action$, store) =>
 
 const doOpenEpic = (action$, store) =>
   action$.ofType(actions.incrementTime.toString())
+    // .do( (action) => console.log(action.payload.timer) )
     .map( ({payload}) => payload)
-    .filter( (payload) => payload === openTiming)
+    .filter( () => getTime(store) === openTiming)
     .map( () => actions.recordOpen( getTime(store) ) )
 
 const doAttackEpic = (action$, store) =>
@@ -66,7 +66,7 @@ const judgeEpic = (action$, store) =>
 
 const debugEpic = (action$, store) =>
   action$
-    .do( (action) => console.log(action, store.getState()) )
+    // .do( (action) => console.log(action, store.getState()) )
     .ignoreElements()
 
 export const epics = combineEpics(

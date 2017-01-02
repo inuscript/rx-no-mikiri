@@ -20,8 +20,9 @@ export const start = createAction("START", "started", (a) => (b) => {
 export const stop = createAction("STOP", "started", () => () => false)
 export const reset = createAction("RESET")
 export const changeLevel = createAction("changeLevel", "level")
-
-export const incrementTime = createAction("INCREMENT_TIME", "timer", () => (s) => s + 1)
+export const incrementTime = createAction('INCREMENT_TIME', 'timer', (text) => {
+  return text
+})
 
 export const doAttack = createAction("DO_ATTACK")
 export const recordAttack = createAction("RECORD_ATTACK", "attack")
