@@ -1,6 +1,6 @@
-import React from 'react';
-import { Component, PropTypes, Children } from 'react'
-import { Provider, connect } from 'react-redux'
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux'
+import { Provider } from './Provider'
 import { configureStore } from '../store'
 import * as actions from '../actions'
 import DevTools from './DevTools' // eslint-disable-line
@@ -117,26 +117,13 @@ class Takenoko extends Component {
 
 const Container = connect(state => ({ game: state }), actions)(Takenoko)
 
-const App = () => (
-  <Provider2 createStore={configureStore}>
-    <Container />
-  </Provider2>
-)
-
-class Provider2 extends Component{
-  constructor(){
-    super()
-  }
-  componentWillMount(){
-    this.store = this.props.createStore()
-  }
-  render() {
-    return (
-      <Provider store={this.store}>
-        {Children.only(this.props.children)}
-      </Provider>
-    )
-  }
+const App = () => {
+  return (
+    <Provider createStore={configureStore}>
+      <Container />
+    </Provider>
+  )
 }
+
 
 export default App;
