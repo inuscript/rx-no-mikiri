@@ -1,9 +1,11 @@
 import { createAction } from 'redux-candy'
-
+import { resetState } from './reducers'
 export const ready = createAction("READY")
 export const start = createAction("START", "started", () => true)
 export const stop = createAction("STOP", "started", () => false)
-export const reset = createAction("RESET")
+export const reset = createAction("RESET", () => {
+  return resetState
+})
 export const changeLevel = createAction("changeLevel", "level")
 export const incrementTime = createAction('INCREMENT_TIME', 'timer', (_, time) => {
   return time
