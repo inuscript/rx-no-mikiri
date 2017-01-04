@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Component, PropTypes, Children } from 'react'
 import { Provider, connect } from 'react-redux'
 import { configureStore } from '../store'
 import * as actions from '../actions'
@@ -116,16 +117,23 @@ class Takenoko extends Component {
 
 const Container = connect(state => ({ game: state }), actions)(Takenoko)
 
-class App extends Component {
+const App = () => (
+  <Provider2 createStore={configureStore}>
+    <Container />
+  </Provider2>
+)
+
+class Provider2 extends Component{
   constructor(){
     super()
-    this.store = configureStore()
+  }
+  componentWillMount(){
+    this.store = this.props.createStore()
   }
   render() {
     return (
       <Provider store={this.store}>
-        <Container/>
-        {/* <DevTools /> */}
+        {Children.only(this.props.children)}
       </Provider>
     )
   }
