@@ -1,27 +1,12 @@
-import * as reduxAction from 'redux-actions'
-
-const identity = (item) => item
-const createAction = function (type, key, updateFunction = identity) {
-  if(!key){
-    return reduxAction.createAction(type)
-  }
-  const payloadCreator = (...params) => {
-    return {
-      [key]: updateFunction(...params)
-    }
-  }
-  return reduxAction.createAction(type, payloadCreator)
-}
+import { createAction } from 'redux-candy'
 
 export const ready = createAction("READY")
-export const start = createAction("START", "started", (a) => (b) => {
-  return true
-})
-export const stop = createAction("STOP", "started", () => () => false)
+export const start = createAction("START", "started", () => true)
+export const stop = createAction("STOP", "started", () => false)
 export const reset = createAction("RESET")
 export const changeLevel = createAction("changeLevel", "level")
-export const incrementTime = createAction('INCREMENT_TIME', 'timer', (text) => {
-  return text
+export const incrementTime = createAction('INCREMENT_TIME', 'timer', (_, time) => {
+  return time
 })
 
 export const doAttack = createAction("DO_ATTACK")
