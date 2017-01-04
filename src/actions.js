@@ -12,8 +12,12 @@ export const incrementTime = createAction('INCREMENT_TIME', 'timer', (_, time) =
 })
 
 export const doAttack = createAction("DO_ATTACK")
-export const recordAttack = createAction("RECORD_ATTACK", "attack")
-export const recordOpen = createAction("RECORD_OPEN", "open")
+export const recordAttack = createAction("RECORD_ATTACK", (time) => {
+  return { attack: time }
+})
+export const recordOpen = createAction("RECORD_OPEN", (time) => {
+  return { open: time }
+})
 export const judge = createAction("JUDGE", "judge")
 
 export const sink = createAction("NULL_ACTION")

@@ -58,7 +58,7 @@ const judgeEpic = (action$, store) =>
     .filter( ([first, second]) =>
       (first.type === actions.recordOpen.toString()
       && second.type === actions.recordAttack.toString()))
-    .map( ([first, second]) => second.payload - first.payload )
+    .map( () => store.getState().attack - store.getState().open )
     .map( (diff) => (0 < diff && diff < getLevel(store))
         ? actions.judge(true)
         : actions.judge(false) )
